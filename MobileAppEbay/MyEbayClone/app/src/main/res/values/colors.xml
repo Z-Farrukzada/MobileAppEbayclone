@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimaryDark">#A88004</color>
+    <color name="colorPrimary">#FFC107</color>
+    <color name="colorSecondary">#FFFFFFFF</color>
+     <color name="successGREEN">#11A10C</color>
+    <color name="colorDark">#000000</color>
+    <color name="colorRed">#AAFA0404</color>
+    <color name="RecycleViewBackground">#d6d6d6</color>
+</resources>

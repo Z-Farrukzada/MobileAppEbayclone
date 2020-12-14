@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "134857981836",
+    "firebase_url": "https://myebayclone.firebaseio.com",
+    "project_id": "myebayclone",
+    "storage_bucket": "myebayclone.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:134857981836:android:a2f6dd255eb4410a8820a9",
+        "android_client_info": {
+          "package_name": "com.zaurfarrukhzada.myebayclone"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "134857981836-u5vhped94ficbjshtac1bk16cd5qh4f5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDBa0-SUg2LaxVWz35KifOQtr-HNoFSXm4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "134857981836-u5vhped94ficbjshtac1bk16cd5qh4f5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
