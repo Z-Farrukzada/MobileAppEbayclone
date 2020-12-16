@@ -1,5 +1,6 @@
 package com.zaurfarrukhzada.myebayclone.ui.home;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.Network;
@@ -39,6 +40,7 @@ import com.zaurfarrukhzada.myebayclone.CategoryModel;
 import com.zaurfarrukhzada.myebayclone.GridProductLayoutAdapter;
 import com.zaurfarrukhzada.myebayclone.HorizontalScrollProductAdapter;
 import com.zaurfarrukhzada.myebayclone.HorizontalScrollProductModel;
+import com.zaurfarrukhzada.myebayclone.MainActivity;
 import com.zaurfarrukhzada.myebayclone.R;
 import com.zaurfarrukhzada.myebayclone.SliderAdapter;
 import com.zaurfarrukhzada.myebayclone.SliderModel;
@@ -71,8 +73,10 @@ public class HomeFragment extends Fragment {
     private RecyclerView homePageRecycleView;
     private HomePageAdapter homePageAdapter;
     private ImageView NoInternetConnect;
+    private Button retryBtn;
 
 
+    @SuppressLint("WrongConstant")
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         homeViewModel =
@@ -83,6 +87,7 @@ public class HomeFragment extends Fragment {
                 ,getContext().getResources().getColor(R.color.colorPrimary),getContext().getResources().getColor(R.color.colorPrimary));
         homePageRecycleView = view.findViewById(R.id.Home_Page_Recycle_View);
         categoryRecyclerView = view.findViewById(R.id.category_recyclerview);
+        retryBtn = view.findViewById(R.id.retry_button);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -112,19 +117,7 @@ public class HomeFragment extends Fragment {
         sliderModelFakeList.add(new SliderModel("null"));
         sliderModelFakeList.add(new SliderModel("null"));
 
-        List<HorizontalScrollProductModel> horizontalScrollProductFakeModelList = new ArrayList<>();
-        horizontalScrollProductFakeModelList.add(new HorizontalScrollProductModel("","","","",""));
-        horizontalScrollProductFakeModelList.add(new HorizontalScrollProductModel("","","","",""));
-        horizontalScrollProductFakeModelList.add(new HorizontalScrollProductModel("","","","",""));
-        horizontalScrollProductFakeModelList.add(new HorizontalScrollProductModel("","","","",""));
-        horizontalScrollProductFakeModelList.add(new HorizontalScrollProductModel("","","","",""));
-        horizontalScrollProductFakeModelList.add(new HorizontalScrollProductModel("","","","",""));
-        horizontalScrollProductFakeModelList.add(new HorizontalScrollProductModel("","","","",""));
 
-        homePageModelFakeList.add(new HomePageModel(0,sliderModelFakeList));
-        homePageModelFakeList.add(new HomePageModel(1,""));
-        homePageModelFakeList.add(new HomePageModel(2,"","#ffffff",horizontalScrollProductFakeModelList,new ArrayList<WishlistModel>()));
-        homePageModelFakeList.add(new HomePageModel(3,"","#ffffff",horizontalScrollProductFakeModelList));
         categoryAdapter = new CategoryAdapter(categoryModelFakeList);
 
 
@@ -136,7 +129,11 @@ public class HomeFragment extends Fragment {
          networkInfo = connectivityManager.getActiveNetworkInfo();
 
         if (networkInfo != null && networkInfo.isConnected() == true) {
+            MainActivity.drawer.setDrawerLockMode(0);
             NoInternetConnect.setVisibility(View.GONE);
+            retryBtn.setVisibility(View.GONE);
+            categoryRecyclerView.setVisibility(View.VISIBLE);
+            homePageRecycleView.setVisibility(View.VISIBLE);
 
             if (categoryModelList.size() == 0) {
                 loadCategories(categoryRecyclerView, getContext());
@@ -157,8 +154,13 @@ public class HomeFragment extends Fragment {
             }
             homePageRecycleView.setAdapter(homePageAdapter);
         } else {
+            MainActivity.drawer.setDrawerLockMode(1);
+            categoryRecyclerView.setVisibility(View.GONE);
+            homePageRecycleView.setVisibility(View.GONE);
             Glide.with(this).load(R.drawable.caveman).into(NoInternetConnect);
             NoInternetConnect.setVisibility(View.VISIBLE);
+            retryBtn.setVisibility(View.VISIBLE);
+
 
         }
         ///Refresh Layout Start
@@ -166,36 +168,58 @@ public class HomeFragment extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-
                 swipeRefreshLayout.setRefreshing(true);
-                categoryModelList.clear();
-                lists.clear();
-                loadCategoriesName.clear();
+                reloadPage();
+            }
+        });
 
-                if (networkInfo != null && networkInfo.isConnected() == true) {
-                    NoInternetConnect.setVisibility(View.GONE);
-                    categoryAdapter = new CategoryAdapter(categoryModelFakeList);
-                    homePageAdapter = new HomePageAdapter(homePageModelFakeList);
-                    categoryRecyclerView.setAdapter(categoryAdapter);
-                    homePageRecycleView.setAdapter(homePageAdapter);
-
-                    loadCategories(categoryRecyclerView, getContext());
-                    loadCategoriesName.add("HOME");
-                    lists.add(new ArrayList<HomePageModel>());
-
-                    loadFragmentData(homePageRecycleView, getContext(),0,"Home");
-                }else {
-                    Glide.with(getContext()).load(R.drawable.caveman).into(NoInternetConnect);
-                    NoInternetConnect.setVisibility(View.VISIBLE);
-
-                }
+        retryBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                reloadPage();
             }
         });
 
         //Refresh Layout End
         return view;
     }
+    @SuppressLint("WrongConstant")
+    private void reloadPage(){
+        networkInfo = connectivityManager.getActiveNetworkInfo();
+        categoryModelList.clear();
+        lists.clear();
+        loadCategoriesName.clear();
 
+        if (networkInfo != null && networkInfo.isConnected() == true) {
+            MainActivity.drawer.setDrawerLockMode(0);
+            NoInternetConnect.setVisibility(View.GONE);
+            retryBtn.setVisibility(View.GONE);
+            categoryRecyclerView.setVisibility(View.VISIBLE);
+            homePageRecycleView.setVisibility(View.VISIBLE);
+
+            categoryAdapter = new CategoryAdapter(categoryModelFakeList);
+            homePageAdapter = new HomePageAdapter(homePageModelFakeList);
+            categoryRecyclerView.setAdapter(categoryAdapter);
+            homePageRecycleView.setAdapter(homePageAdapter);
+
+            loadCategories(categoryRecyclerView, getContext());
+            loadCategoriesName.add("HOME");
+            lists.add(new ArrayList<HomePageModel>());
+
+            loadFragmentData(homePageRecycleView, getContext(),0,"Home");
+        }else {
+            MainActivity.drawer.setDrawerLockMode(1);
+            Toast.makeText(getContext(),"No internet connect",Toast.LENGTH_SHORT).show();
+            categoryRecyclerView.setVisibility(View.GONE);
+            homePageRecycleView.setVisibility(View.GONE);
+            Glide.with(getContext()).load(R.drawable.caveman).into(NoInternetConnect);
+            NoInternetConnect.setVisibility(View.VISIBLE);
+            retryBtn.setVisibility(View.VISIBLE);
+            swipeRefreshLayout.setRefreshing(false);
+
+
+        }
+    }
 
 
 }

@@ -48,6 +48,8 @@ public class SignInFragment extends Fragment {
 
     private FirebaseAuth firebaseAuth;
     private String emailPattern="^[\\w.-]+@(?=[a-z\\d][^.]*\\.)[a-z\\d.-]*[^.]$";
+
+    public static  boolean disableBtn = false;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -62,6 +64,11 @@ public class SignInFragment extends Fragment {
         progressBar=view.findViewById(R.id.sign_in_progressbar);
         forgotPassword=view.findViewById(R.id.sign_in_forgot_password);
         firebaseAuth=FirebaseAuth.getInstance();
+        if(disableBtn){
+            closeBtn.setVisibility(View.GONE);
+        }else{
+            closeBtn.setVisibility(View.VISIBLE);
+        }
         return view;
     }
 
@@ -186,8 +193,12 @@ public class SignInFragment extends Fragment {
        }
     }
     private void mainIntent(){
-        Intent mainIntent =new Intent(getActivity(),MainActivity.class);
-        startActivity(mainIntent);
+        if(disableBtn){
+            disableBtn = false;
+        }else {
+            Intent mainIntent = new Intent(getActivity(), MainActivity.class);
+            startActivity(mainIntent);
+        }
         getActivity().finish();
     }
 }

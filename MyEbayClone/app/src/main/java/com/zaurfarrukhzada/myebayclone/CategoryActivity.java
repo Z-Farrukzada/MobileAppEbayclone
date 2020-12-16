@@ -49,7 +49,7 @@ public class CategoryActivity extends AppCompatActivity {
 
         homePageAdapter = new HomePageAdapter(homePageModelFakeList);
         categoryRecycleView.setAdapter(homePageAdapter);
-        ////homepage fake list\\\\\
+       ////homepage fake list\\\\\
         List<SliderModel> sliderModelFakeList = new ArrayList<>();
         sliderModelFakeList.add(new SliderModel("null"));
         sliderModelFakeList.add(new SliderModel("null"));
